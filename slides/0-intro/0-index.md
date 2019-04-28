@@ -9,6 +9,12 @@
 - Funtor
 - Funtor aplicativo
 - Mónada
+
+--
+
+### ADTs
+
+- Identity
 - Maybe
 - IO
 - Future

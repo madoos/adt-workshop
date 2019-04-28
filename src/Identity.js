@@ -31,8 +31,8 @@ class Identity {
   }
 
   // -- applicative
-  ap(Identity) {
-    return Identity.map(this._value)
+  ap(identity) {
+    return identity.map(this._value)
   }
 
   // -- utils
