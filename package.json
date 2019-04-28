@@ -1,0 +1,34 @@
+{
+  "name": "adt-workshop",
+  "version": "1.0.0",
+  "description": "ADT workshop",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest --verbose",
+    "slides:build": "node slides.js",
+    "slides:dev": "npm run slides:build & npm run slides:start & watch 'npm run slides:build' slides",
+    "slides:start": "reveal-md -w --theme moon slides.md"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/madoos/adt-workshop.git"
+  },
+  "keywords": [
+    "functor",
+    "monad",
+    "applicative",
+    "category theory"
+  ],
+  "author": "Maurice Domínguez",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/madoos/adt-workshop/issues"
+  },
+  "homepage": "https://github.com/madoos/adt-workshop#readme",
+  "devDependencies": {
+    "jest": "^24.7.1",
+    "ramda": "^0.26.1",
+    "reveal-md": "^2.4.1",
+    "watch": "^1.0.2"
+  }
+}
