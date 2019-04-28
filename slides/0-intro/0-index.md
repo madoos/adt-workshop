@@ -9,3 +9,7 @@
 - Funtor
 - Funtor aplicativo
 - Mónada
+- Maybe
+- IO
+- Future
+- Stream
