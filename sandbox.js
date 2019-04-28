@@ -1,0 +1,3 @@
+const {
+  Identity
+} = require('./src')
