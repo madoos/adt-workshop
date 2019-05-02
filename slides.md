@@ -11,6 +11,16 @@
 - Mónada
 
 --
+
+### ADTs
+
+- Identity
+- Maybe
+- IO
+- Future
+- Stream
+
+--
 ### Teoría de categorías
 
 --

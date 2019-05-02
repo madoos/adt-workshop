@@ -30,5 +30,8 @@
     "ramda": "^0.26.1",
     "reveal-md": "^2.4.1",
     "watch": "^1.0.2"
+  },
+  "dependencies": {
+    "fantasy-land": "^4.0.1"
   }
 }
