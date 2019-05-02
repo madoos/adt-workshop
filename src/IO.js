@@ -49,7 +49,12 @@ class IO {
 
   [inspect.custom]() {
     return this.toString()
-  }
+	}
+	
+	// iofy :: * -> b -> * -> IO b
+	static iofy(f){
+		return (...args) => new IO(() => f(...args))
+	}
 }
 
 module.exports = construct(IO)
