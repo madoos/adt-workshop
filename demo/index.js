@@ -10,7 +10,9 @@ import {
 	curry,
 	propEq,
 	when,
-	always
+	always,
+	chain,
+	ifElse
 } from 'ramda'
 import {
 	html,
@@ -61,7 +63,7 @@ const searchOMDBMovie = pipe(
 	map(when(propEq('Response', 'False'), always(null)))
 )
 
-// createDomMovie :: { Title, Year } -> TemplateElement
+// createDomMovie :: { Title, Year, Poster } -> TemplateElement
 const createDomMovie = ({
 	Title,
 	Year,
@@ -81,6 +83,9 @@ const createDomMovie = ({
 // safeCreateDomMovie :: {} | null -> Maybe TemplateElement
 const safeCreateDomMovie = pipe(
 	Maybe.of,
+	chain(
+		ifElse(propEq('Poster', 'N/A'), Maybe.Nothing, Maybe.Just)
+	),
 	map(createDomMovie)
 )
 

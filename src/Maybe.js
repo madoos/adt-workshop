@@ -1,56 +1,64 @@
 const {
-  inspect
+	inspect
 } = require('util')
 
 const {
-  construct
+	construct
 } = require('./util')
 
 const {
-  isNil
+	isNil
 } = require('ramda')
 
 class Maybe {
-  constructor(value) {
-    this._value = value
-  }
+	constructor(value) {
+		this._value = value
+	}
 
-  // -- Pointed
-  static of (value) {
-    return new Maybe(value)
-  }
+	static Nothing() {
+		return new Maybe()
+	}
 
-  // --Functor
-  map(f) {
-    return this.isNothing() ? this : new Maybe(f(this._value))
-  }
+	static Just(value) {
+		return new Maybe(value)
+	}
 
-  // --Monad
-  chain(f) {
-    return this.map(f).join()
-  }
+	// -- Pointed
+	static of (value) {
+		return new Maybe(value)
+	}
 
-  join() {
-    return this.isNothing() ? this : this._value
-  }
+	// --Functor
+	map(f) {
+		return this.isNothing() ? this : new Maybe(f(this._value))
+	}
 
-  // -- applicative
-  ap(maybe) {
-    return this.isNothing() ? this : maybe.map(this._value)
-  }
+	// --Monad
+	chain(f) {
+		return this.map(f).join()
+	}
 
-  // -- utils
-  isNothing() {
-    return isNil(this._value)
-  }
+	join() {
+		return this.isNothing() ? this : this._value
+	}
 
-  toString() {
-    return this.isNothing() ? `Nothing()` : `Just(${this._value})`
-  }
+	// -- applicative
+	ap(maybe) {
+		return this.isNothing() ? this : maybe.map(this._value)
+	}
 
-  [inspect.custom]() {
-    return this.toString()
-  }
+	// -- utils
+	isNothing() {
+		return isNil(this._value)
+	}
+
+	toString() {
+		return this.isNothing() ? `Nothing()` : `Just(${this._value})`
+	}
+
+	[inspect.custom]() {
+		return this.toString()
+	}
 }
 
 module.exports = construct(Maybe)
