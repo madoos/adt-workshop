@@ -1,2 +1,4 @@
 node_modules
 .vscode
+demo/bundle.js.map
+demo/bundle.js

@@ -1,10 +1,14 @@
 const FL = require('fantasy-land')
+const {
+	curry
+} = require('ramda')
 
 const construct = (Constructor) => {
 	const wrappedConstructor = (...args) => new Constructor(...args)
 
-	Object.getOwnPropertyNames(Constructor).filter(prop => typeof Constructor[prop] === "function").forEach((method) => {
-		wrappedConstructor[method] = Constructor[method]
+	Object.getOwnPropertyNames(Constructor).filter(prop => typeof Constructor[prop] === "function").forEach((methodName) => {
+		const method = Constructor[methodName]
+		wrappedConstructor[methodName] = curry(method)
 	})
 
 	Constructor.prototype[FL.map] = Constructor.prototype.map

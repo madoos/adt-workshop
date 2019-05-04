@@ -1,24 +1,22 @@
-
-
 const {
-  inspect
+	inspect
 } = require('util')
 
 const {
-  construct
+	construct
 } = require('./util')
 
 const {
-  pipe
+	pipe
 } = require('ramda')
 
 class Stream {
-  constructor(produceValues){
+	constructor(produceValues) {
 		this._produceValues = produceValues
 	}
 
 	// -- pointed
-	static of(value){
+	static of (value) {
 		return new Stream((handler) => {
 			handler.next(value)
 			handler.complete()
@@ -26,9 +24,9 @@ class Stream {
 		})
 	}
 
-	static from(iterable){
+	static from(iterable) {
 		return new Stream((handler) => {
-			for(let value of iterable){
+			for (let value of iterable) {
 				handler.next(value)
 			}
 
@@ -37,17 +35,31 @@ class Stream {
 		})
 	}
 
-	forEach({ next, error, complete}){
+	// -- consume
+	forEach({
+		next,
+		error,
+		complete
+	}) {
 		const noop = () => {}
-		return this._produceValues({ 
-			next: next || noop, 
-			error: error || noop, 
+		return this._produceValues({
+			next: next || noop,
+			error: error || noop,
 			complete: complete || noop
-		}) 
+		})
 	}
 
+	subscribe(next, error, complete) {
+		return this.forEach({
+			next,
+			error,
+			complete
+		})
+	}
+
+
 	// -- functor
-  map(f){
+	map(f) {
 		return new Stream((handler) => {
 			return this._produceValues({
 				next: (data) => handler.next(f(data)),
@@ -57,37 +69,51 @@ class Stream {
 		})
 	}
 
-// -- monad
-chain(f){
-	return this.map(f).join()
-}
+	// -- monad
+	chain(f) {
+		return this.map(f).join()
+	}
 
-join(){
-	return new Stream((handler) => {
-		return this._produceValues({
-			next: (stream) => stream.forEach({ next: handler.next, error: handler.error }),
-			error: (e) => handler.error(e),
-			complete: () => handler.complete()
+	join() {
+		return new Stream((handler) => {
+			return this._produceValues({
+				next: (stream) => stream.forEach({
+					next: handler.next,
+					error: handler.error
+				}),
+				error: (e) => handler.error(e),
+				complete: () => handler.complete()
+			})
 		})
-	})
-}
+	}
 
-// -- applicative
-ap(stream){
-	return this.chain((f) => stream.map(f))
-}
+	// -- applicative
+	ap(stream) {
+		return this.chain((f) => stream.map(f))
+	}
 
-// -- utils
-  toString() {
-    return `Stream(?)`
-  }
+	// -- utils
+	toString() {
+		return `Stream(?)`
+	}
 
-  [inspect.custom]() {
-    return this.toString()
+	[inspect.custom]() {
+		return this.toString()
 	}
 
 	static create(produceValues) {
 		return new Stream(produceValues)
+	}
+
+	static fromDomEvent(event, emitter) {
+		return new Stream((handler) => {
+			const isNative = Boolean(emitter.addEventListener)
+			const add = isNative ? 'addEventListener' : 'on'
+			const remove = isNative ? 'removeEventListener' : 'off'
+			const next = (data) => handler.next(data)
+			emitter[add](event, next)
+			return () => emitter[remove](event, next)
+		})
 	}
 }
 
