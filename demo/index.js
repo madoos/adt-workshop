@@ -42,7 +42,7 @@ const wikipediaSearch = pipe(
 )
 
 // createDomList :: [String] -> TemplateElement
-const createDomList = map((movie) => html `<li data-movie=${movie} >${movie}</li>`)
+const createDomList = map((movie) => html `<li data-movie=${movie} class="fade-in" >${movie}</li>`)
 
 // autocompleteMovies :: String -> IO Stream Future e TemplateElement
 const autocompleteMoviesFrom = pipe(
@@ -70,7 +70,7 @@ const createDomMovie = ({
 	Poster,
 	Plot
 }) => html `
-	<div class="movie-template">
+	<div class="fade-in">
 		<img src=${Poster} alt=${Title} />
 		<h4>
 			${Title} ${Year}

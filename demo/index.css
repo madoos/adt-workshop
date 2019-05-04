@@ -1,0 +1,25 @@
+html {
+	text-align: center;
+}
+
+.fade-in {
+	-webkit-animation: fadein 2s;
+	-moz-animation: fadein 2s;
+	-ms-animation: fadein 2s;
+	-o-animation: fadein 2s;
+	animation: fadein 2s;
+}
+
+#movies {
+	opacity: 0.5;
+	list-style-type: none;
+}
+
+#movies li {
+	cursor: pointer;
+	list-style-type: none;
+}
+
+#movies li:hover {
+	font-weight: bold;
+}
