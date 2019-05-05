@@ -9,18 +9,47 @@ const {
 const {
 	Transform,
 	Readable
-} = require('stream')
+} = require('readable-stream')
 
 const OPT = {
 	objectMode: true
 }
 
+// isFunction :: a -> Boolean
+const isFunction = (x) => typeof x === 'function'
+
+// isPromise :: a -> Boolean
+const isPromise = (x) => Object(x).constructor === Promise
+
+// noop :: void -> void
+const noop = () => {}
+
+// mapTransform :: ((a -> b) | (a -> Promise e b)) -> Transform b
 const mapTransform = (f) => new Transform({
 	objectMode: true,
-	transform: (data, enc, done) => done(null, f(data))
+	transform(data, enc, done) {
+		try {
+			const x = f(data, enc)
+			if (isPromise(x)) x.then((_data) => done(null, _data)).catch(done)
+			else done(null, x)
+		} catch (e) {
+			done(e)
+		}
+	}
 })
 
+// handleMapTransform :: ((a -> b) | Transform b) -> Transform b
+const handleMapTransform = (x) => isFunction(x) ? mapTransform(x) : x
+
+// joinTransform :: () -> Transform a
+const joinTransform = () => new Transform({
+	objectMode: true,
+	transform: (wrapStream, _, done) => {
+		wrapStream.subscribe((data) => done(null, data), (e) => done(e))
+	}
+})
 class WrapStream {
+	// constructor :: () -> NodeStream -> WrapStream
 	constructor(getStream) {
 		this._getStream = getStream
 	}
@@ -44,11 +73,38 @@ class WrapStream {
 		})
 	}
 
+	static fromPromise(promise) {
+		return new WrapStream(() => {
+			const stream = new Readable(OPT)
+
+			promise
+				.then((value) => {
+					stream.push(value)
+					stream.push(null)
+				})
+				.catch((e) => {
+					stream.emit('error', e)
+				})
+
+			return stream
+		})
+	}
+
+	//  streamify :: (* -> NodeStream) ->  (* -> WrapStream) 
+	static streamify(f) {
+		return (...args) => new WrapStream(() => f(...args))
+	}
+
+	//  streamifyP :: (* -> Promise e a) ->  (* -> WrapStream a) 
+	static streamifyP(f) {
+		return (...args) => new WrapStream(() => WrapStream.fromPromise(f(...args)))
+	}
+
 	// -- functor 
 	map(f) {
-		return new WrapStream(() => {
-			return this._getStream().pipe(mapTransform(f))
-		})
+		return new WrapStream(() =>
+			this._getStream().pipe(handleMapTransform(f))
+		)
 	}
 
 	// -- monad
@@ -57,33 +113,48 @@ class WrapStream {
 	}
 
 	join() {
-		return new WrapStream(() => {
-			return this._getStream().pipe(new Transform({
-				objectMode: true,
-				transform: (stream, enc, done) => {
-					stream.forEach({
-						next: (data) => done(null, data),
-						error: (e) => done(e)
-					})
-				}
-			}))
-		})
+		return new WrapStream(() =>
+			this._getStream().pipe(joinTransform())
+		)
 	}
 
-	// applicative
+	// -- applicative
 	ap(wrapStream) {
-		return this.chain((f) => {
-			return wrapStream.map(f)
+		return this.chain((f) =>
+			wrapStream.map(f)
+		)
+	}
+
+	// transform :: (NodeStream -> NodeStream) -> WrapStream
+	transform(f) {
+		return new WrapStream(() => {
+			return f(this._getStream())
 		})
 	}
 
 	// -- consume 
-	forEach(handler) {
-		const noop = () => {}
-		this._getStream()
-			.on('data', handler.next || noop)
-			.on('error', handler.error || noop)
-			.on('finish', handler.complete || noop)
+	forEach({
+		next,
+		error,
+		complete
+	}) {
+
+		const stream = isFunction(next) || next === undefined ?
+			this._getStream().on('data', next || noop) :
+			this._getStream().pipe(next)
+
+		return stream
+			.on('error', error || noop)
+			.on('finish', complete || noop)
+
+	}
+
+	subscribe(next, error, complete) {
+		return this.forEach({
+			next,
+			error,
+			complete
+		})
 	}
 
 	// -- utils
@@ -95,10 +166,6 @@ class WrapStream {
 		return this.toString()
 	}
 
-	//  streamify :: (* -> NodeStream) ->  (* -> WrapStream) 
-	static streamify(f) {
-		return (...args) => new WrapStream(() => f(...args))
-	}
 }
 
 module.exports = construct(WrapStream)
