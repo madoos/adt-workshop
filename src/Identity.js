@@ -1,49 +1,49 @@
 const {
-  inspect
+	inspect
 } = require('util')
 
 const {
-  construct
+	construct
 } = require('./util')
 
 class Identity {
-  constructor(value) {
-    this._value = value
-  }
+	constructor(value) {
+		this._value = value
+	}
 
-  // -- Pointed
-  static of (value) {
-    return new Identity(value)
-  }
+	// -- Pointed
+	static of (value) {
+		return new Identity(value)
+	}
 
-  // --Functor
-  map(f) {
-    return new Identity(f(this._value))
-  }
+	// --Functor
+	map(f) {
+		return new Identity(f(this._value))
+	}
 
-  // --Monad
-  chain(f) {
-    return this.map(f).join()
-  }
+	// --Monad
+	chain(f) {
+		return this.map(f).join()
+	}
 
-  join() {
-    return this._value
-  }
+	join() {
+		return this._value
+	}
 
-  // -- applicative
-  ap(identity) {
-    return identity.map(this._value)
-  }
+	// -- applicative
+	ap(identity) {
+		return identity.map(f => f(this._value))
+	}
 
-  // -- utils
+	// -- utils
 
-  toString() {
-    return `Identity(${this._value})`
-  }
+	toString() {
+		return `Identity(${this._value})`
+	}
 
-  [inspect.custom]() {
-    return this.toString()
-  }
+	[inspect.custom]() {
+		return this.toString()
+	}
 }
 
 module.exports = construct(Identity)
