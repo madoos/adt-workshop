@@ -105,7 +105,7 @@ class Stream {
 		return new Stream(produceValues)
 	}
 
-	static fromDomEvent(event, emitter) {
+	static fromEvent(event, emitter) {
 		return new Stream((handler) => {
 			const isNative = Boolean(emitter.addEventListener)
 			const add = isNative ? 'addEventListener' : 'on'

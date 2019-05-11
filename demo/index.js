@@ -47,7 +47,7 @@ const createDomList = map((movie) => html `<li data-movie=${movie} class="fade-i
 // autocompleteMovies :: String -> IO Stream Future e TemplateElement
 const autocompleteMoviesFrom = pipe(
 	getDomElement,
-	map(Stream.fromDomEvent('keyup')),
+	map(Stream.fromEvent('keyup')),
 	map(map(path(['target', 'value']))),
 	map(map(wikipediaSearch)),
 	map(map(map(createDomList)))
@@ -92,7 +92,7 @@ const safeCreateDomMovie = pipe(
 // searchMovieFromClick :: String -> IO Stream Future e Maybe TemplateElement
 const searchMovieFromClick = pipe(
 	getDomElement,
-	map(Stream.fromDomEvent('click')),
+	map(Stream.fromEvent('click')),
 	map(map(path(['target', 'dataset', 'movie']))),
 	map(map(searchOMDBMovie)),
 	map(map(map(safeCreateDomMovie))),
