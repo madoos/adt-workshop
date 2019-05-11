@@ -1,6 +1,7 @@
 const FL = require('fantasy-land')
 const {
-	curry
+	curry,
+	curryN
 } = require('ramda')
 
 const construct = (Constructor) => {
@@ -18,6 +19,9 @@ const construct = (Constructor) => {
 	return wrappedConstructor
 }
 
+const log = curry((tag, data) => console.log(tag, data))
+
 module.exports = {
-	construct
+	construct,
+	log
 }
