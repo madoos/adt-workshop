@@ -89,7 +89,7 @@ class Stream {
 
 	// -- applicative
 	ap(stream) {
-		return this.chain((f) => stream.map(f))
+		return this.chain(val => stream.map(f => f(val)))
 	}
 
 	// -- utils

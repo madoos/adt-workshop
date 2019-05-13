@@ -40,10 +40,10 @@ class Future {
 
 	// -- applicative
 	ap(future) {
-		return this.map(f => future.map(f)).join()
+		return this.chain(val => future.map(f => f(val)))
 	}
-	// -- utils
 
+	// -- utils
 	toString() {
 		return `Future(?)`
 	}

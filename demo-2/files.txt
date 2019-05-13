@@ -5,5 +5,5 @@ Stream.js
 index.js
 IO.js
 Maybe.js
-Ord.Point.laws.test.js
-WrapStream.js
+Ord.Point.js
+NodeStream.js

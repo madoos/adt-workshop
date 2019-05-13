@@ -44,7 +44,7 @@ class Maybe {
 
 	// -- applicative
 	ap(maybe) {
-		return this.isNothing() ? this : maybe.map(this._value)
+		return this.isNothing() ? this : this.chain(val => maybe.map(f => f(val)))
 	}
 
 	// -- utils

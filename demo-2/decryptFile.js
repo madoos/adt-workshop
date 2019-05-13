@@ -12,12 +12,12 @@ const {
 	secret
 } = require('./utils')
 
-const WrapStream = require('../src/WrapStream')
-const readFileStream = WrapStream.streamify(createReadStream)
+const NodeStream = require('../src/NodeStream')
+const readFileStream = NodeStream.streamify(createReadStream)
 
 const ENCRYPTED_FILE_PATH = `${__dirname}/encrypted.txt`
 
-// readDecryptFile :: path -> WrapStream
+// readDecryptFile :: path -> NodeStream
 const readDecryptFile = pipe(
 	readFileStream,
 	map(createDecipher(secret.algorithm, secret.password)),

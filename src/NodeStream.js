@@ -27,9 +27,9 @@ const noop = () => {}
 // mapTransform :: ((a -> b) | (a -> Promise e b)) -> Transform b
 const mapTransform = (f) => new Transform({
 	objectMode: true,
-	transform(data, enc, done) {
+	transform(data, _, done) {
 		try {
-			const x = f(data, enc)
+			const x = f(data)
 			if (isPromise(x)) x.then((_data) => done(null, _data)).catch(done)
 			else done(null, x)
 		} catch (e) {
@@ -120,8 +120,10 @@ class WrapStream {
 
 	// -- applicative
 	ap(wrapStream) {
-		return this.chain((f) =>
-			wrapStream.map(f)
+		return this.chain((val) =>
+			wrapStream.map(f => {
+				return f(val)
+			})
 		)
 	}
 
@@ -139,13 +141,16 @@ class WrapStream {
 		complete
 	}) {
 
-		const stream = isFunction(next) || next === undefined ?
+		const isConsumedWithFunction = isFunction(next) || next === undefined
+		const completeEvent = isConsumedWithFunction ? 'end' : 'finish'
+
+		const stream = isConsumedWithFunction ?
 			this._getStream().on('data', next || noop) :
 			this._getStream().pipe(next)
 
 		return stream
 			.on('error', error || noop)
-			.on('finish', complete || noop)
+			.on(completeEvent, complete || noop)
 
 	}
 

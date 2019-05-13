@@ -22,8 +22,8 @@ const {
 } = require('./utils')
 
 const csv = require('fast-csv')
-const WrapStream = require('../src/WrapStream')
-const readFileStream = WrapStream.streamify(createReadStream)
+const NodeStream = require('../src/NodeStream')
+const readFileStream = NodeStream.streamify(createReadStream)
 const runWrapStream = invoker(3, 'subscribe')
 
 const LIST_FILE_PATH = `${__dirname}/files.txt`
@@ -36,7 +36,7 @@ const writeFileWith = runWrapStream(
 	() => log('Wrote: ', 'encrypted file!')
 )
 
-// encryptFiles :: path -> WrapStream
+// encryptFiles :: path -> NodeStream
 const encryptFile = pipe(
 	readFileStream,
 	map(csv()),

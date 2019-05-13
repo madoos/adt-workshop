@@ -38,7 +38,7 @@ class IO {
 
 	// -- applicative
 	ap(io) {
-		return this.chain(f => io.map(f));
+		return this.chain(val => io.map(f => f(val)));
 	}
 
 	// -- utils

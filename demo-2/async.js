@@ -13,14 +13,14 @@ const {
 	curry,
 	invoker,
 	head,
-	concat
+	concat,
+	lift
 } = require('ramda')
 const {
-	log,
-	lift
+	log
 } = require('./utils')
 
-const WrapStream = require('../src/WrapStream')
+const NodeStream = require('../src/NodeStream')
 const Future = require('../src/Future')
 const csv = require('fast-csv')
 
@@ -30,8 +30,8 @@ const runFuture = invoker(2, 'fork')
 const LIST_FILE_PATH = `${__dirname}/files.txt`
 const SRC_PATH = join(__dirname, '../src/')
 
-// readFileStream :: path -> WrapStream
-const readFileStream = WrapStream.streamify(createReadStream)
+// readFileStream :: path -> NodeStream
+const readFileStream = NodeStream.streamify(createReadStream)
 
 // filesSize :: path -> Future e Number 
 const filesSize = pipe(
@@ -49,7 +49,7 @@ const fileFormat = curry((name, size) => ({
 // fileSizeWithFormat :: path -> Future e { name, size}
 const fileSizeWithFormat = converge(lift(fileFormat), [Future.of, filesSize])
 
-// getFileSizes :: path -> WrapStream Future e Object
+// getFileSizes :: path -> NodeStream Future e Object
 const getFileSizes = pipe(
 	readFileStream,
 	map(csv()),
