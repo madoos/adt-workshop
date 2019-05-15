@@ -10,7 +10,10 @@
 		"slides:start": "reveal-md -w --theme moon slides.md",
 		"build": "webpack --watch",
 		"serve": "webpack-dev-server",
-		"start:dev": "npm run build && npm run serve"
+		"start:dev": "npm run build && npm run serve",
+		"sandbox": "nodemon sandbox.js",
+		"example:monoid:1": "nodemon example/monoid/1.generic.fold.js",
+		"example:monoid:2": "nodemon example/monoid/2.parallel.asociativity/index.js"
 	},
 	"repository": {
 		"type": "git",
@@ -30,6 +33,7 @@
 	"homepage": "https://github.com/madoos/adt-workshop#readme",
 	"devDependencies": {
 		"jest": "^24.7.1",
+		"nodemon": "^1.19.0",
 		"reveal-md": "^2.4.1",
 		"watch": "^1.0.2",
 		"webpack": "^4.30.0",
