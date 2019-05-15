@@ -24,8 +24,11 @@ const secret = {
 	password: 'd6F3Efeq'
 }
 
+const shuffle = xs => [...xs].sort(() => Math.random() - 0.5);
+
 module.exports = {
 	construct,
 	log,
-	secret
+	secret,
+	shuffle
 }

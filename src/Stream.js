@@ -141,6 +141,30 @@ class Stream {
 			return () => emitter[remove](event, next)
 		})
 	}
+
+	static intervalApply(f, ms) {
+		let i = 0
+		return new Stream((hander) => {
+			const id = setInterval(() => hander.next(f(i++)), ms)
+			return () => clearInterval(id)
+		})
+	}
+
+	static streamify(f) {
+		let canceled = false
+		return (...args) => new Stream((handler) => {
+			f(...args, (e, data) => {
+				if (e) return handler.error(e)
+				if (!canceled) {
+					handler.next(data)
+					handler.complete()
+				}
+			})
+
+			return () => canceled = true
+		})
+	}
+
 }
 
 module.exports = construct(Stream)

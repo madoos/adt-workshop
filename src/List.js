@@ -10,6 +10,9 @@ const {
 	unary
 } = require('ramda')
 
+const {
+	stringify
+} = JSON
 
 class List {
 	constructor(values) {
@@ -63,11 +66,12 @@ class List {
 
 	// utils
 	toString() {
-			return `List(${this._values})`
-		}
-		[inspect.custom]() {
-			return this.toString()
-		}
+		return `List(${stringify(this._values, null, 2)})`
+	}
+
+	[inspect.custom]() {
+		return this.toString()
+	}
 
 }
 

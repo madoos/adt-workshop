@@ -13,8 +13,11 @@
 		"start:dev": "npm run build && npm run serve",
 		"sandbox": "nodemon sandbox.js",
 		"example:monoid:1": "nodemon example/monoid/1.generic.fold.js",
-		"example:monoid:2": "nodemon example/monoid/2.parallel.asociativity/index.js",
+		"example:monoid:2": "nodemon example/monoid/2.parallel.associativity/index.js",
 		"example:functor:1": "nodemon example/functor/1.files.stat.js",
+		"example:applicative:1": "nodemon example/applicative/1.function.lifting.js",
+		"example:applicative:2": "nodemon example/applicative/2.multidimensional.loops.js",
+		"example:applicative:3": "nodemon example/applicative/3.stream.xproduct.js",
 		"example:monad:1": "nodemon example/monad/1.encrypt.js",
 		"example:monad:2": "nodemon example/monad/2.decrypt.js"
 	},
