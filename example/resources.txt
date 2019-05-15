@@ -1,9 +1,7 @@
 Future.js
 Identity.js
-Ord.Point.js
 Stream.js
 index.js
 IO.js
 Maybe.js
-Ord.Point.js
 NodeStream.js

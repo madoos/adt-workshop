@@ -1,7 +1,7 @@
 const FL = require('fantasy-land')
 const {
 	curry,
-	curryN
+	assoc
 } = require('ramda')
 
 const construct = (Constructor) => {
@@ -21,7 +21,13 @@ const construct = (Constructor) => {
 
 const log = curry((tag, data) => console.log(tag, data))
 
+const secret = {
+	algorithm: 'aes-256-ctr',
+	password: 'd6F3Efeq'
+}
+
 module.exports = {
 	construct,
-	log
+	log,
+	secret
 }
