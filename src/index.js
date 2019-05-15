@@ -1,12 +1,28 @@
 const {
-  readdirSync
-} = require('fs')
+	pipe,
+	replace,
+	map,
+	includes,
+	reject,
+	split,
+	reduce,
+	assocPath
+} = require('ramda')
 
-// Dynamically loads each function implemented
-module.exports = readdirSync(__dirname)
-  .filter(file => file !== 'index.js' && !file.includes('.test.js'))
-  .map((file) => file.replace('.js', ''))
-  .reduce((lib, file) => ({
-    ...lib,
-    [file]: require(`./${file}`)
-  }), {})
+const readDir = require('recursive-readdir-sync')
+
+const requireAll = pipe(
+	readDir,
+	reject(includes('test')),
+	map(
+		pipe(
+			replace(`${__dirname}`, ''),
+			replace('/', ''),
+			replace('.js', '')
+		),
+	),
+	map((path) => [path, require(`${__dirname}/${path}`)]),
+	reduce((acc, [name, module]) => assocPath(split('/', name), module, acc), {})
+)
+
+module.exports = requireAll(__dirname)

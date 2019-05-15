@@ -1,6 +1,10 @@
 const {
+	inspect
+} = require('util')
+
+const {
 	construct
-} = require('../../../src/util')
+} = require('../util')
 
 const {
 	identity
@@ -17,6 +21,15 @@ class Compose {
 
 	concat(compose) {
 		return new Compose(x => this._value(compose._value(x)))
+	}
+
+	// -- utils
+	toString() {
+		return `Compose(${this._value})`
+	}
+
+	[inspect.custom]() {
+		return this.toString()
 	}
 }
 

@@ -1,6 +1,10 @@
 const {
+	inspect
+} = require('util')
+
+const {
 	construct
-} = require('../../../src/util')
+} = require('../util')
 
 const {
 	add
@@ -19,6 +23,15 @@ class Sum {
 		return new Sum(
 			add(this._value, sum._value)
 		)
+	}
+
+	// -- utils
+	toString() {
+		return `Sum(${this._value})`
+	}
+
+	[inspect.custom]() {
+		return this.toString()
 	}
 }
 

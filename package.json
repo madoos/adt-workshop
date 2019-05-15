@@ -42,6 +42,7 @@
 		"fast-csv": "^2.5.0",
 		"lit-html": "^1.0.0",
 		"ramda": "^0.26.1",
-		"readable-stream": "^3.3.0"
+		"readable-stream": "^3.3.0",
+		"recursive-readdir-sync": "^1.0.6"
 	}
 }

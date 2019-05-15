@@ -26,7 +26,7 @@ const foldMapP = curry((Monoid, f, xs) => {
 	)(xs)
 })
 
-const Sum = require('../src/Sum')
+const Sum = require('../../../src/Monoid/Sum')
 
 // users :: { name, balance }
 const users = [

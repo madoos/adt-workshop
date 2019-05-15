@@ -1,6 +1,10 @@
 const {
+	inspect
+} = require('util')
+
+const {
 	construct
-} = require('../../../src/util')
+} = require('../util')
 
 class Max {
 	constructor(n) {
@@ -15,6 +19,15 @@ class Max {
 		return new Max(
 			this._value > max._value ? this._value : max._value
 		)
+	}
+
+	// -- utils
+	toString() {
+		return `Max(${this._value})`
+	}
+
+	[inspect.custom]() {
+		return this.toString()
 	}
 }
 

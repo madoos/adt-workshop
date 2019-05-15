@@ -8,10 +8,9 @@ const {
 	inc
 } = require('ramda')
 
-const Sum = require('./src/Sum')
-const Max = require('./src/Max')
-const Compose = require('./src/Compose')
-
+const Sum = require('../../src/Monoid/Sum')
+const Max = require('../../src/Monoid/Max')
+const Compose = require('../../src/Monoid/Compose')
 const fold = curry((Monoid, xs) => xs.reduce((acc, val) => acc.concat(Monoid(val)), Monoid.empty())._value)
 
 log(
