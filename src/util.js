@@ -1,21 +1,19 @@
 const FL = require('fantasy-land')
 const {
-	curry,
-	assoc
+	curry
 } = require('ramda')
 
 const construct = (Constructor) => {
 	const wrappedConstructor = (...args) => new Constructor(...args)
 
-	Object.getOwnPropertyNames(Constructor).filter(prop => typeof Constructor[prop] === "function").forEach((methodName) => {
-		const method = Constructor[methodName]
-		wrappedConstructor[methodName] = curry(method)
-	})
+	Object.getOwnPropertyNames(Constructor)
+		.filter(prop => typeof Constructor[prop] === "function")
+		.forEach((prop) => wrappedConstructor[prop] = curry(Constructor[prop]))
 
-	Constructor.prototype[FL.map] = Constructor.prototype.map
-	Constructor.prototype[FL.chain] = Constructor.prototype.chain
-	Constructor.prototype[FL.ap] = Constructor.prototype.ap
-	wrappedConstructor[FL.of] = wrappedConstructor.of
+	Object.getOwnPropertyNames(Constructor.prototype)
+		.filter(prop => !['constructor', 'toString'].includes(prop) && FL[prop])
+		.forEach((prop) => Constructor.prototype[FL[prop]] = Constructor.prototype[prop])
+
 	return wrappedConstructor
 }
 
