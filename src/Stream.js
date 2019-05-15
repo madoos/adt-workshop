@@ -57,11 +57,37 @@ class Stream {
 		})
 	}
 
+	// -- monoid
+	concat(stream) {
+		let unsubscribe
+		return new Stream((handler) => {
+			unsubscribe = this.forEach({
+				next: data => handler.next(data),
+				error: e => handler.error(e),
+				complete: () => {
+					unsubscribe = stream.forEach({
+						next: data => handler.next(data),
+						error: e => handler.error(e),
+						complete: () => handler.complete()
+					})
+				}
+			})
+
+			return unsubscribe
+		})
+	}
+
+	static empty() {
+		return new Stream((handler) => {
+			handler.complete()
+			return () => {}
+		})
+	}
 
 	// -- functor
 	map(f) {
 		return new Stream((handler) => {
-			return this._produceValues({
+			return this.forEach({
 				next: (data) => handler.next(f(data)),
 				error: (e) => handler.error(e),
 				complete: () => handler.complete()
@@ -76,7 +102,7 @@ class Stream {
 
 	join() {
 		return new Stream((handler) => {
-			return this._produceValues({
+			return this.forEach({
 				next: (stream) => stream.forEach({
 					next: handler.next,
 					error: handler.error

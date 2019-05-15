@@ -7,7 +7,7 @@ const {
 describe('Compose', () => {
 	laws.monoid({
 		type: Compose,
-		isEquivalent: (x, y) => Promise.resolve(x._value(10) === y._value(10)),
+		isEquivalent: (x, y) => Promise.resolve(x._f(10) === y._f(10)),
 		value: inc
 	})
 })

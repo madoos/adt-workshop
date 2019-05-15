@@ -24,11 +24,18 @@ describe('Stream', () => {
 	laws.prove({
 		type: Stream,
 		adt: [
+			"monoid",
 			"functor",
 			"applicativeFunctor",
 			"pointedFunctor",
 			"monad"
 		],
-		isEquivalent: isEquivalent
+		isEquivalent: isEquivalent,
+		value: (handler) => {
+			handler.next(1)
+			handler.next(2)
+			handler.complete()
+			return noop
+		}
 	})
 })

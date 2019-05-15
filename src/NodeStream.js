@@ -12,9 +12,9 @@ const {
 } = require('readable-stream')
 
 const OPT = {
-	objectMode: true
+	objectMode: true,
+	read() {}
 }
-
 // isFunction :: a -> Boolean
 const isFunction = (x) => typeof x === 'function'
 
@@ -98,6 +98,36 @@ class WrapStream {
 	//  streamifyP :: (* -> Promise e a) ->  (* -> WrapStream a) 
 	static streamifyP(f) {
 		return (...args) => new WrapStream(() => WrapStream.fromPromise(f(...args)))
+	}
+
+	// -- monoid
+	concat(wrapStream) {
+		return new WrapStream(() => {
+			const stream = new Readable(OPT)
+
+			const onNext = x => stream.push(x)
+			const onError = e => stream.emit('error', e)
+
+			this.subscribe(
+				onNext,
+				onError,
+				() => wrapStream.subscribe(
+					onNext,
+					onError,
+					() => stream.push(null)
+				)
+			)
+
+			return stream
+		})
+	}
+
+	static empty() {
+		return new WrapStream(() => {
+			const stream = new Readable(OPT)
+			stream.push(null)
+			return stream
+		})
 	}
 
 	// -- functor 

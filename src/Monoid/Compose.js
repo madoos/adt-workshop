@@ -12,7 +12,7 @@ const {
 
 class Compose {
 	constructor(f) {
-		this._value = f
+		this._f = f
 	}
 
 	static empty() {
@@ -20,12 +20,12 @@ class Compose {
 	}
 
 	concat(compose) {
-		return new Compose(x => this._value(compose._value(x)))
+		return new Compose(x => this._f(compose._f(x)))
 	}
 
 	// -- utils
 	toString() {
-		return `Compose(${this._value})`
+		return `Compose(${this._f})`
 	}
 
 	[inspect.custom]() {
