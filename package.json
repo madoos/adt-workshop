@@ -19,7 +19,8 @@
 		"example:applicative:2": "nodemon example/applicative/2.multidimensional.loops.js",
 		"example:applicative:3": "nodemon example/applicative/3.stream.xproduct.js",
 		"example:monad:1": "nodemon example/monad/1.encrypt.js",
-		"example:monad:2": "nodemon example/monad/2.decrypt.js"
+		"example:monad:2": "nodemon example/monad/2.decrypt.js",
+		"example:monad:3": "nodemon example/monad/3.input.output.js"
 	},
 	"repository": {
 		"type": "git",
