@@ -12,7 +12,10 @@ import {
 	when,
 	always,
 	chain,
-	ifElse
+	ifElse,
+	both,
+	complement,
+	isNil
 } from 'ramda'
 import {
 	html,
@@ -22,6 +25,7 @@ import Future from '../src/Future'
 import Stream from '../src/Stream'
 import IO from '../src/IO'
 import Maybe from '../src/Maybe'
+import Either from '../src/Either'
 
 // getDomElement :: String -> IO Dom
 const getDomElement = IO.iofy((id) => document.getElementById(id))
@@ -80,6 +84,17 @@ const createDomMovie = ({
 		</div>
 	</div>
 `
+
+// notFound :: () -> TemplateElement
+const notFound = () => html `
+	<div class="fade-in">
+		<h4>
+			Movie Not Found
+		</h4>
+	</div>
+`
+
+
 // safeCreateDomMovie :: {} | null -> Maybe TemplateElement
 const safeCreateDomMovie = pipe(
 	Maybe.of,
@@ -89,13 +104,20 @@ const safeCreateDomMovie = pipe(
 	map(createDomMovie)
 )
 
-// searchMovieFromClick :: String -> IO Stream Future e Maybe TemplateElement
+// createDomMovieOrNotFound :: Either TemplateElement
+const createDomMovieOrNotFound = ifElse(
+	both(complement(isNil), complement(propEq('Poster', 'N/A'))),
+	pipe(createDomMovie, Either.Right),
+	pipe(notFound, Either.Left)
+)
+
+// searchMovieFromClick :: String -> IO Stream Future e Either TemplateElement
 const searchMovieFromClick = pipe(
 	getDomElement,
 	map(Stream.fromEvent('click')),
 	map(map(path(['target', 'dataset', 'movie']))),
 	map(map(searchOMDBMovie)),
-	map(map(map(safeCreateDomMovie))),
+	map(map(map(createDomMovieOrNotFound)))
 )
 
 // ################## UTILS ##################
@@ -103,14 +125,16 @@ const searchMovieFromClick = pipe(
 const runIo = invoker(0, 'unsafePerformIO')
 const runStream = invoker(1, 'subscribe')
 const runFuture = invoker(2, 'fork')
+const fold = invoker(2, 'fold')
 const log = curry((tag, data) => console.log(tag, data))
 const renderInto = curry((id, template) => render(template, document.getElementById(id)))
 
 // ################## IMPURE ##################
 
+const renderIntoMovie = renderInto('movie')
 const renderAutoCompletion = runFuture(log('autocompletion error'), renderInto('movies'))
 const renderAutocompletionFromInput = pipe(autocompleteMoviesFrom, runIo, runStream(renderAutoCompletion))
-const safeRenderMovie = runFuture(log('movie Error'), map(renderInto('movie')))
+const safeRenderMovie = runFuture(log('movie Error'), fold(renderIntoMovie, renderIntoMovie))
 const safeRenderMovieFromClickOn = pipe(searchMovieFromClick, runIo, runStream(safeRenderMovie))
 
 // ################## PROGRAM ##################
