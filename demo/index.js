@@ -104,14 +104,14 @@ const safeCreateDomMovie = pipe(
 	map(createDomMovie)
 )
 
-// createDomMovieOrNotFound :: Either TemplateElement
+// createDomMovieOrNotFound :: {} | null -> Either TemplateElement TemplateElement
 const createDomMovieOrNotFound = ifElse(
 	both(complement(isNil), complement(propEq('Poster', 'N/A'))),
 	pipe(createDomMovie, Either.Right),
 	pipe(notFound, Either.Left)
 )
 
-// searchMovieFromClick :: String -> IO Stream Future e Either TemplateElement
+// searchMovieFromClick :: String -> IO Stream Future e Either TemplateElement TemplateElement
 const searchMovieFromClick = pipe(
 	getDomElement,
 	map(Stream.fromEvent('click')),
