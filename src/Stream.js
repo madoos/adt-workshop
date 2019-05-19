@@ -24,6 +24,14 @@ class Stream {
 		})
 	}
 
+	static reject(value) {
+		return new Stream((handler) => {
+			handler.error(value)
+			handler.complete()
+			return () => {} // unsubscribe
+		})
+	}
+
 	static from(iterable) {
 		return new Stream((handler) => {
 			for (let value of iterable) {

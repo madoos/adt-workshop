@@ -20,6 +20,10 @@ class Future {
 		return new Future((reject, resolve) => resolve(value))
 	}
 
+	static reject(value) {
+		return new Future((reject) => reject(value))
+	}
+
 	// -- functor
 	map(f) {
 		return new Future((reject, resolve) => {

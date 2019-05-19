@@ -37,6 +37,10 @@ class Identity {
 
 	// -- utils
 
+	fold(f) {
+		return f(this._value)
+	}
+
 	toString() {
 		return `Identity(${this._value})`
 	}

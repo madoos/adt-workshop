@@ -59,6 +59,14 @@ class Maybe {
 	[inspect.custom]() {
 		return this.toString()
 	}
+
+	fold(f, g) {
+		return this.isNothing() ? f() : g(this._value)
+	}
+
+	static fromNullable(val) {
+		return isNil(val) ? Maybe.Nothing() : Maybe.Just(val)
+	}
 }
 
 module.exports = construct(Maybe)

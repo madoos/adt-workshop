@@ -73,6 +73,10 @@ class List {
 		return this.toString()
 	}
 
+	fold(f) {
+		return f(this._values)
+	}
+
 }
 
 module.exports = construct(List)
