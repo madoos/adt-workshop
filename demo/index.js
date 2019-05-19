@@ -26,6 +26,11 @@ import Stream from '../src/Stream'
 import IO from '../src/IO'
 import Maybe from '../src/Maybe'
 import Either from '../src/Either'
+import {
+	ioToStream,
+	futureToStream,
+	eitherToStream
+} from '../src/nt'
 
 // getDomElement :: String -> IO Dom
 const getDomElement = IO.iofy((id) => document.getElementById(id))
@@ -48,13 +53,13 @@ const wikipediaSearch = pipe(
 // createDomList :: [String] -> TemplateElement
 const createDomList = map((movie) => html `<li data-movie=${movie} class="fade-in" >${movie}</li>`)
 
-// autocompleteMovies :: String -> IO Stream Future e TemplateElement
+// autocompleteMovies :: String -> Stream TemplateElement
 const autocompleteMoviesFrom = pipe(
-	getDomElement,
-	map(Stream.fromEvent('keyup')),
-	map(map(path(['target', 'value']))),
-	map(map(wikipediaSearch)),
-	map(map(map(createDomList)))
+	ioToStream(getDomElement),
+	chain(Stream.fromEvent('keyup')),
+	map(path(['target', 'value'])),
+	chain(futureToStream(wikipediaSearch)),
+	map(createDomList)
 )
 
 // ################## SEARCH MOVIE FROM OMDB ##################
@@ -111,33 +116,20 @@ const createDomMovieOrNotFound = ifElse(
 	pipe(notFound, Either.Left)
 )
 
-// searchMovieFromClick :: String -> IO Stream Future e Either TemplateElement TemplateElement
+// searchMovieFromClick :: String -> Stream TemplateElement
 const searchMovieFromClick = pipe(
-	getDomElement,
-	map(Stream.fromEvent('click')),
-	map(map(path(['target', 'dataset', 'movie']))),
-	map(map(searchOMDBMovie)),
-	map(map(map(createDomMovieOrNotFound)))
+	ioToStream(getDomElement),
+	chain(Stream.fromEvent('click')),
+	map(path(['target', 'dataset', 'movie'])),
+	chain(futureToStream(searchOMDBMovie)),
+	chain(eitherToStream(createDomMovieOrNotFound))
 )
 
 // ################## UTILS ##################
 
-const runIo = invoker(0, 'unsafePerformIO')
-const runStream = invoker(1, 'subscribe')
-const runFuture = invoker(2, 'fork')
-const fold = invoker(2, 'fold')
-const log = curry((tag, data) => console.log(tag, data))
 const renderInto = curry((id, template) => render(template, document.getElementById(id)))
-
-// ################## IMPURE ##################
-
-const renderIntoMovie = renderInto('movie')
-const renderAutoCompletion = runFuture(log('autocompletion error'), renderInto('movies'))
-const renderAutocompletionFromInput = pipe(autocompleteMoviesFrom, runIo, runStream(renderAutoCompletion))
-const safeRenderMovie = runFuture(log('movie Error'), fold(renderIntoMovie, renderIntoMovie))
-const safeRenderMovieFromClickOn = pipe(searchMovieFromClick, runIo, runStream(safeRenderMovie))
 
 // ################## PROGRAM ##################
 
-renderAutocompletionFromInput('search')
-safeRenderMovieFromClickOn('movies')
+autocompleteMoviesFrom('search').subscribe(renderInto('movies'))
+searchMovieFromClick('movies').subscribe(renderInto('movie'), renderInto('movie'))
