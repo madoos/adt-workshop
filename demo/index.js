@@ -122,22 +122,22 @@ const searchMovieFromClick = pipe(
 
 // ################## UTILS ##################
 
-const runIo = invoker(0, 'unsafePerformIO')
-const runStream = invoker(1, 'subscribe')
-const runFuture = invoker(2, 'fork')
-const fold = invoker(2, 'fold')
 const log = curry((tag, data) => console.log(tag, data))
 const renderInto = curry((id, template) => render(template, document.getElementById(id)))
 
-// ################## IMPURE ##################
-
-const renderIntoMovie = renderInto('movie')
-const renderAutoCompletion = runFuture(log('autocompletion error'), renderInto('movies'))
-const renderAutocompletionFromInput = pipe(autocompleteMoviesFrom, runIo, runStream(renderAutoCompletion))
-const safeRenderMovie = runFuture(log('movie Error'), fold(renderIntoMovie, renderIntoMovie))
-const safeRenderMovieFromClickOn = pipe(searchMovieFromClick, runIo, runStream(safeRenderMovie))
-
 // ################## PROGRAM ##################
 
-renderAutocompletionFromInput('search')
-safeRenderMovieFromClickOn('movies')
+autocompleteMoviesFrom('search')
+	.unsafePerformIO()
+	.subscribe((wikipediaResult) => {
+		wikipediaResult.fork(log('autocompletion error'), renderInto('movies'))
+	})
+
+searchMovieFromClick('movies')
+	.unsafePerformIO()
+	.subscribe((omdbMovie) => {
+		omdbMovie.fork(
+			log('Error getting movie'),
+			(movieOrNotFoundTemplate) => movieOrNotFoundTemplate.fold(renderInto('movie'), renderInto('movie'))
+		)
+	})
