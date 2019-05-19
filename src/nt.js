@@ -145,12 +145,12 @@ const ioToStream = io =>
 const futureToStream = future =>
 	Stream(handler => {
 		future.fork(
-			data => {
-				handler.next(data)
-				handler.complete()
-			},
 			e => {
 				handler.error(e)
+				handler.complete()
+			},
+			data => {
+				handler.next(data)
 				handler.complete()
 			}
 		)
