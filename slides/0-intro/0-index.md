@@ -1,4 +1,4 @@
-### ADTs y bases de la programación funcional
+### Monoides, functores y mónadas: Bienvenido al mundo de los ADTs
 
 --
 

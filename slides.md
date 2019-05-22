@@ -1,4 +1,4 @@
-### ADTs y bases de la programación funcional
+### Monoides, functores y mónadas: Bienvenido al mundo de los ADTs
 
 --
 
@@ -29,6 +29,13 @@ La teoría de categorías es un estudio matemático que trata de axiomatizar de 
 
 --
 
+![picture](https://nikgrozev.com/images/blog/Functional%20Programming%20and%20Category%20Theory%20Part%201%20-%20Categories%20and%20Functors/endofunctor.jpg)
+
+--
+
+![picture](https://cdn-images-1.medium.com/max/3998/1%2A-JICmgqkQmDXmNVkei9AbQ.jpeg)
+--
+
 ¿Por qué interesa para la programación?
 
 --
@@ -49,6 +56,10 @@ Las estructuras algebraicas se clasifican según las propiedades que cumplen las
 
 --
 
+![picture](https://raw.githubusercontent.com/fantasyland/fantasy-land/master/figures/dependencies.png)
+
+--
+
 ### ADTs
 
 Setoide y Ord como ejemplo
@@ -63,6 +74,11 @@ Es una estructura algebraica con una operación binaria, que es asociativa y tie
 
 --
 
+Objeto que tiene una forma de concatenarse con otros y contiene un elemento neutro.
+Si muchos objetos se tienen que concatenar no importa el orden porque siempre siempre se obtiene mismo resultado.
+
+--
+
 ### Funtor
 
 --
@@ -71,11 +87,19 @@ Es una función de una categoría a otra que lleva objetos a objetos y morfismos
 
 --
 
+Son contextos seguros para ejecutar funciones puras y permiten utilizar nuestras funciones independientemente del contexto.
+
+--
+
 ### Funtor aplicativo
 
 --
 
 Es una estructura intermedia entre los funtores y las mónadas, permitiendo la secuenciación de varias computaciones funtoriales (al contrario que los funtores en general) pero sin poder hacer depender la próxima computación del resultado de la anterior (a diferencia de las mónadas). Técnicamente, en teoría de categorías, los funtores aplicativos son funtores monoidales laxos con fuerza tensorial.
+
+--
+
+Nos permite poner una función en un contexto, hacer operaciones entre contextos y computar en paralelo.
 
 --
 
@@ -91,27 +115,11 @@ Es un endofunctor (un functor desde una categoría hacia ella misma), junto con 
 
 --
 
+Nos permite olvidarnos de que tenemos contextos del mismo tipo anidados y computar secuencialmente.
+
+--
 Muchas gracias!!
 
 ![picture](https://s5.eestatic.com/2016/12/16/social/Memes-Humor-Redes_sociales-Internet-La_Jungla_178744040_23538138_1706x960.jpg)
-
----
-## Example Vertical
-
-You can change separator in file `reveal-md.json`
-
-See [reveal-md](https://github.com/webpro/reveal-md) info
-
---
-## Example 2
-
-Example 5
-
---
-
-Example 6
-
---
-Example 7
 
 ---
