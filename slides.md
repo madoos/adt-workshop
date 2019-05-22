@@ -69,11 +69,12 @@ Setoide y Ord como ejemplo
 ### Monoide
 
 --
+![picture](https://i.pinimg.com/originals/fa/fa/99/fafa990c40ca49c69367f8221f097bb8.jpg)
 
 Es una estructura algebraica con una operación binaria, que es asociativa y tiene elemento neutro, es decir, es un semigrupo con identidad.
 
 --
-
+![picture](https://cdn141.picsart.com/270074705011201.jpg?c256x256)
 Objeto que tiene una forma de concatenarse con otros y contiene un elemento neutro.
 Si muchos objetos se tienen que concatenar no importa el orden porque siempre siempre se obtiene mismo resultado.
 
@@ -83,9 +84,14 @@ Si muchos objetos se tienen que concatenar no importa el orden porque siempre si
 
 --
 
+![picture](https://i.pinimg.com/originals/fa/fa/99/fafa990c40ca49c69367f8221f097bb8.jpg)
+
+
 Es una función de una categoría a otra que lleva objetos a objetos y morfismos a morfismos de manera que la composición de morfismos y las identidades se preserven.
 
 --
+
+![picture](https://cdn141.picsart.com/270074705011201.jpg?c256x256)
 
 Son contextos seguros para ejecutar funciones puras y permiten utilizar nuestras funciones independientemente del contexto.
 
@@ -95,9 +101,14 @@ Son contextos seguros para ejecutar funciones puras y permiten utilizar nuestras
 
 --
 
+![picture](https://i.pinimg.com/originals/fa/fa/99/fafa990c40ca49c69367f8221f097bb8.jpg)
+
+
 Es una estructura intermedia entre los funtores y las mónadas, permitiendo la secuenciación de varias computaciones funtoriales (al contrario que los funtores en general) pero sin poder hacer depender la próxima computación del resultado de la anterior (a diferencia de las mónadas). Técnicamente, en teoría de categorías, los funtores aplicativos son funtores monoidales laxos con fuerza tensorial.
 
 --
+
+![picture](https://cdn141.picsart.com/270074705011201.jpg?c256x256)
 
 Nos permite poner una función en un contexto, hacer operaciones entre contextos y computar en paralelo.
 
@@ -106,6 +117,8 @@ Nos permite poner una función en un contexto, hacer operaciones entre contextos
 ### Mónada
 
 --
+![picture](https://i.pinimg.com/originals/fa/fa/99/fafa990c40ca49c69367f8221f097bb8.jpg)
+
 
 Es un moniode en la categoría de los endofuntores
 
@@ -114,6 +127,9 @@ Es un moniode en la categoría de los endofuntores
 Es un endofunctor (un functor desde una categoría hacia ella misma), junto con dos transformaciones naturales. Las mónadas son utilizadas en la teoría de pares de functores adjuntos, y generalizan los operadores de clausura en conjuntos parcialmente ordenados a categorías arbitrarias.
 
 --
+
+![picture](https://cdn141.picsart.com/270074705011201.jpg?c256x256)
+
 
 Nos permite olvidarnos de que tenemos contextos del mismo tipo anidados y computar secuencialmente.
 
