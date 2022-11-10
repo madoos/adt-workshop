@@ -3,6 +3,9 @@
 	"version": "1.0.0",
 	"description": "ADT workshop",
 	"main": "index.js",
+	"engines": {
+		"node": "^12.14.0"
+	},
 	"scripts": {
 		"test": "jest --verbose",
 		"slides:build": "node slides.js",
